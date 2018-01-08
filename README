@@ -1,0 +1,11 @@
+code styling used: pep8
+
+
+*************** How to execute program ***************
+Terminal commands:
+
+To compile protocol buffer and generate descriptor classes to be used for serializing messages to protocol buffer.
+$ make compile
+
+To run application
+$ make run

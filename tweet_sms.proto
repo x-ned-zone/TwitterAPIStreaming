@@ -1,0 +1,41 @@
+// [START declaration]
+syntax="proto3";
+package TwitterAPIStreaming;
+// [END decleration]
+
+// [START messages]
+message SMSMessage {
+    int32 message_id =1;
+    int64 tweet_id = 2 ;
+    string message_text =3 ;
+    string date =4;
+    string media_source =5;
+    string text_language =6;
+
+    int64 user_id =7;
+    string user_name =8;
+    string user_screen_name =9;
+    string user_location =10;
+
+    string destinationServer =11;
+    int32 destinationPort =12;
+
+}
+message Tweet_SMS {
+    repeated SMSMessage smses =1;
+}
+
+//message MMS {
+//    int32 message_id =1;
+//
+//        message Multimedia {
+//            string image =1 ;
+//            string audio =2 ;
+//            string video =3 ;
+//    }
+//}
+//message Tweet_MMS {
+//    repeated MMS mms = 1;
+//}
+
+// [END messages]
