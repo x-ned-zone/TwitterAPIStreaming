@@ -37,8 +37,8 @@ class SerializeMessage:
             sms_pb.user_screen_name = SMSobj.user_screen_name
             sms_pb.user_location = user_location
 
-            sms_pb.destinationServer = SMSobj.destinationServer
-            sms_pb.destinationPort = SMSobj.destinationPort
+            # sms_pb.destinationServer = SMSobj.destinationServer
+            # sms_pb.destinationPort = SMSobj.destinationPort
 
         except Exception as a_error:
             print("Add SMS error: " + a_error.__str__())
