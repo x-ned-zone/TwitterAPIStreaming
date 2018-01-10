@@ -4,24 +4,25 @@ import json
 import time
 import sys
 from langdetect import detect
-from SMS import SMS
 from SerializeMessage import SerializeMessage
 from langdetect.lang_detect_exception import LangDetectException
+
+from http.client import IncompleteRead # Python 3
+from urllib3.exceptions import ProtocolError
+
+from SMS import SMS
 
 
 class MyStreamListener(tweepy.StreamListener):
     """ This is a stream listener class, which streams data from the twitter API and stores it in a data structure"""
-    # out_serialize_file = ""
-    # filter_languages = ""
-    # streaming_duration = 0.0
-    # start_time = 0.0
 
-    def __init__(self, tweet_messages_pb, filter_lang, duration, start_time, option):
+    def __init__(self, tweet_messages_pb, filter_lang, duration, start_time, option, full_spritzer):
         self.out_serialize_file = tweet_messages_pb
         self.filter_languages = filter_lang
         self.streaming_duration = duration
         self.start_time = start_time
         self.serialize_option = option
+        self.full_spritzer_ = full_spritzer
 
     """Override methods from Tweepy Stream
     ************************** [START] ************************** """
@@ -46,7 +47,7 @@ class MyStreamListener(tweepy.StreamListener):
             # Extract status of selected language.
             # Extract only tweet that is not a retweet, to avoid repetition of the same tweets.
 
-            if time.time()-self.start_time <= self.streaming_duration:
+            if time.time()-self.start_time <= self.streaming_duration or self.full_spritzer_:
                 if raw_data and ("delete" not in tweet_json) \
                         and (tweet_json["user"]["lang"] == "en") \
                         and (not tweet_json["retweeted"] and 'RT @' not in tweet_json["text"]):
@@ -68,7 +69,6 @@ class MyStreamListener(tweepy.StreamListener):
                         text_language = detect(tweet_text)
                     except LangDetectException as lang_ex:
                         pass
-                        # print("\nLanguage detect error : " + lang_ex.__str__())
 
                     if not text_language == "N/A" and \
                             (text_language in self.filter_languages or self.filter_languages == "all"):
@@ -80,11 +80,18 @@ class MyStreamListener(tweepy.StreamListener):
                                              user_screen_name, source, user_location, text_language)
                     else:
                         pass
-                        # print("Language not detected, skipping tweet!")
 
                     return True
             else:
                 return False
+
+        except ProtocolError:
+            print ("ProtocolError ... pass")
+            pass
+
+        except IncompleteRead:
+            print ("IncompleteRead ... pass")
+            pass
 
         except UnicodeDecodeError as d:
             print("decode error: " + d.message)
@@ -93,7 +100,7 @@ class MyStreamListener(tweepy.StreamListener):
             print("encode error: " + e.message)
 
         except Exception as e:
-            print("Exception error: " + e.message)
+            print("Exception error: " + e.__str__())
 
     # return False in on_data disconnects the stream
     def on_error(self, status_code):
