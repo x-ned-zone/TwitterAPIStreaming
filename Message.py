@@ -16,15 +16,10 @@ class Message (ABC):
     date = ""
     media_source = ""
     text_language = ""
-
     user_id = 0
     user_name = ""
     user_screen_name = ""
     user_location = ""
-
-    # default values
-    destinationServer = ""
-    destinationPort = 0
 
     multi_media = {"image": {}, "audio": {}, "video": {}}
 
@@ -36,18 +31,13 @@ class Message (ABC):
         self.tweet_id = t_id
         self.message = tweet_text
         self.date = date
-
-        # [ user id, name, screen_name, location, media source]
         self.user_id = user_id
         self.user_name = user_name
         self.user_screen_name = screen_name
         self.user_location = user_location
         self.media_source = source
-
         self.text_language = text_language
 
-        self.destinationServer = "localhost"  # "127.0.0.1
-        self.destinationPort = 80
 
     def set_multi_media(self, m_media_list):
         return
