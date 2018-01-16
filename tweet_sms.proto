@@ -25,17 +25,4 @@ message Tweet_SMS {
     repeated SMSMessage smses =1;
 }
 
-//message MMS {
-//    int32 message_id =1;
-//
-//        message Multimedia {
-//            string image =1 ;
-//            string audio =2 ;
-//            string video =3 ;
-//    }
-//}
-//message Tweet_MMS {
-//    repeated MMS mms = 1;
-//}
-
 // [END messages]
