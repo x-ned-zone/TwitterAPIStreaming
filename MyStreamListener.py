@@ -2,6 +2,7 @@ import tweepy
 import json
 import time
 import sys
+from sys import getsizeof
 from langdetect import detect
 from langdetect.lang_detect_exception import LangDetectException
 
@@ -68,9 +69,13 @@ class MyStreamListener(tweepy.StreamListener):
                         TwitterAPIStreaming.m_count = 0
 
                     if self.me_index[0] % 2 == 0:
-                        sys.stdout.write("Streaming ... Tweet [ %i ] \r" % (self.me_index[0] + 1))
+                        sys.stdout.write(
+                            "Streaming ... Tweet [ %i ]   Buffer size = %f bytes \r" %
+                            (self.me_index[0] + 1, float(getsizeof(self.t_buffer))))
                     else:
-                        sys.stdout.write("Streaming ... Tweet [ %i ] \r" % (self.me_index[0] + 1))
+                        sys.stdout.write(
+                            "Streaming ... Tweet [ %i ]   Buffer size = %f bytes \r" %
+                            (self.me_index[0] + 1, float(getsizeof(self.t_buffer))))
                     sys.stdout.flush()
 
                     serialize = SerializeMessage(self.out_serialize_file,
@@ -123,8 +128,6 @@ class MyStreamListener(tweepy.StreamListener):
         # time.sleep(15*60)
         pass
 
-    def re_connect(self):
-        print("\nReconnecting ...")
         return
     """ [END] """
 
