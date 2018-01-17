@@ -1,11 +1,23 @@
-code styling used: pep8
+Twitter API Streaming
+=====================
+This application queries the API streaming on Twitter for twitter spritzer (a random 1% sample of public tweets).
 
+Language coding style used: pep8
 
-*************** How to execute program ***************
+License
+-------
+GNU GPL License
+
+How to execute program
+----------------------
 Terminal commands:
 
-To compile protocol buffer and generate descriptor classes to be used for serializing messages to protocol buffer.
+To compile protocol buffer and generate descriptor classes to be used for serializing messages to protocol buffer
+'''	
 $ make compile
+'''
 
 To run application
+'''
 $ make run
+'''
