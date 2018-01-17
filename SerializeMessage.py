@@ -33,10 +33,10 @@ class SerializeMessage(threading.Thread):
 
     def run(self):
         # Protocol buffer
-        if self.option_s == 1:
-            self.export_protob()
-        else:
-            self.buffer_json()
+        # if self.option_s == 1:
+        #     self.export_protob()
+        # else:
+        self.buffer_tweet()
 
     def truncate_text(self, text_length, text, N):
         """Truncate/split text to multi parts texts of length n"""
@@ -46,7 +46,7 @@ class SerializeMessage(threading.Thread):
             text_collection.append(atext)
         return text_collection
 
-    def buffer_json(self):
+    def buffer_tweet(self):
 
         # Generate a multipart SMS for tweets longer than 140 characters.
         # Create multiple SMS object(s) from the message splits and,
@@ -76,21 +76,33 @@ class SerializeMessage(threading.Thread):
         except Exception as w_error:
             print("export_json error: " + w_error.__str__())
 
-    def export_protob(self):
+    def export_protob(self, t_buffer):
         # Generate a multipart SMS for tweets longer than 140 characters.
 
         # Create SMS object(s) from the message splits
         # Write to message to protocol buffer
 
-        for text in self.truncate_text(len(self.tweet_text), self.tweet_text, N=140):
+        for a_tweet in t_buffer:
+            a_text = a_tweet
+            for text in self.truncate_text(len(a_text), a_text, N=140):
 
-            self.me_index[0] += 1
+                self.me_index[0] += 1
 
-            anSMS = SMS(self.tweet_id, self.date, text, self.user_id, self.user_name, self.user_screen_name,
-                        self.source, self.user_location, self.text_language, message_id=self.me_index[0])
+                anSMS = SMS(a_tweet["tweet_id"], a_tweet["date"], text, a_tweet["user_id"], a_tweet["user_name"],
+                            a_tweet["user_screen_name"], a_tweet["source"], a_tweet["user_location"],
+                            a_tweet["text_language"], a_tweet["message_id"])
 
-            # Tweet-SMS >> TO >> PROTOCOL BUFFER
-            self.write_to_pb(self.messages_file, anSMS)
+                # Tweet-SMS >> TO >> PROTOCOL BUFFER
+                self.write_to_pb(self.messages_file, anSMS)
+
+                # for text in self.truncate_text(len(self.tweet_text), self.tweet_text, N=140):
+                # self.me_index[0] += 1
+                #
+                # anSMS = SMS(self.tweet_id, self.date, text, self.user_id, self.user_name, self.user_screen_name,
+                #             self.source, self.user_location, self.text_language, message_id=self.me_index[0])
+                #
+                # # Tweet-SMS >> TO >> PROTOCOL BUFFER
+                # self.write_to_pb(self.messages_file, anSMS)
 
     # =================================================================================================================
     tweet_messages = tweet_sms_pb.Tweet_SMS()
