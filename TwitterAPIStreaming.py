@@ -24,12 +24,11 @@ class TwitterAPIStreaming:
 
         self.streaming_duration = duration
         self.output_file = output_file
-        self.duration = duration
         self.serialize_option = serialize_option
         self.full_spritzer = full_spritzer
 
     def stream_tweets(self):
-        
+
         start_time = time.time()
 
         print()
@@ -67,18 +66,18 @@ class TwitterAPIStreaming:
                 print("Stream tweets error : \n", te_error.__str__())
 
             except ProtocolError as pe:
+                TRACE("\nProtocolError: " + pe.__str__() + "\n Time ")
 
-                TRACE(pe.__str__() + "\nProtocolError: \n" + "time : ")
-
-                # reconnect to api stream
                 my_stream.running = True
+                # reconnect to api stream
                 print("\nReconnecting ...")
+
                 continue_stream = True
                 continue
 
             except IncompleteRead as ir:
                 print("\nIncompleteRead error : \n", ir.__str__())
-                continue
+                pass #continue
 
             except KeyboardInterrupt:
                 # allow keyboard exiting ctr+c
@@ -160,7 +159,7 @@ class TwitterAPIStreaming:
                                      anSMS["user_location"], anSMS["text_lan"], anSMS["message_id"])
 
                         sms_list.append(SMSobj)
-                        print(SMSobj.get_message(), end="\n\n")
+                        # print(SMSobj.get_message(), end="\n\n")
                 except Exception as l_error:
                     print("List SMS error (json) : " + l_error.__str__())
                     sys.exit()
@@ -178,11 +177,12 @@ class TwitterAPIStreaming:
 def TRACE(log_text):
     from datetime import datetime
     t_time = time.time()
-    print("\n%s : %f\n" % (log_text, t_time))
+    print("\n%s : %s\n" % (log_text, datetime.fromtimestamp(t_time).strftime('%c')))
     try:
         f_log = open("TRACE.txt", "a+")
-        f_log.write("\n%s : %f" % (log_text, time.time()))
-        f_log.write("\nDatetime : %s" % datetime.fromtimestamp(t_time).strftime('%c'))
+        # f_log.write("\n%s : %f" % (log_text, t_time))
+        # f_log.write("\nDatetime : %s" % datetime.fromtimestamp(t_time).strftime('%c'))
+        f_log.write("\n%s : %s" % (log_text, datetime.fromtimestamp(t_time).strftime('%c')))
         f_log.close()
     except Exception as err:
         print(err.__str__())
@@ -201,7 +201,7 @@ def main():
     filename = "media/twitter_spritzer"
     full_spritzer = False
     option = 0
-    streaming_duration = float(60*10)   # Enter 0 for a full spritzer
+    streaming_duration = float(0)   # Enter 0 for a full spritzer
 
     print()
     from SerializeMessage import SerializeMessage
@@ -254,8 +254,12 @@ def main():
         query_stream.stream_tweets()
         TRACE("End Stream time")
 
-        # Serialize the json buffer with tweets to json file
-        if option == 2:
+        # Serialize the buffer with tweets to json file or protocol buffer binary file
+        if option == 1:
+            serialize_data = SerializeMessage(filename)
+            serialize_data.export_protob(TwitterAPIStreaming.tweets_buffer)
+
+        elif option == 2:
             ser_json = SerializeMessage(filename)
             ser_json.export_json(TwitterAPIStreaming.tweets_buffer)
 
@@ -273,6 +277,8 @@ def main():
 
         """ SMS transfer """
         # query_stream.send_serialized_file(filename, d_server=dest_server, d_port=dest_port, option=option)
+
+        del TwitterAPIStreaming.tweets_buffer
 
     except Exception as exp:
         print("error : ", exp.__str__())
