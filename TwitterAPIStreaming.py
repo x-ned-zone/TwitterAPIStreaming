@@ -76,8 +76,8 @@ class TwitterAPIStreaming:
                 continue
 
             except IncompleteRead as ir:
-                print("\nIncompleteRead error : \n", ir.__str__())
-                pass #continue
+                # print("\nIncompleteRead error : \n", ir.__str__())
+                pass  # continue
 
             except KeyboardInterrupt:
                 # allow keyboard exiting ctr+c
@@ -85,11 +85,11 @@ class TwitterAPIStreaming:
                 continue_stream = False
 
             except ConnectionError as conn_err:
-                print("\nConnection error : ", conn_err.__str__())
+                # print("\nConnection error : ", conn_err.__str__())
                 pass
 
             except Exception as other_error:
-                print("\nOther error :", other_error)
+                # print("\nOther error :", other_error)
                 pass
 
     """send message object"""
@@ -177,11 +177,15 @@ class TwitterAPIStreaming:
 def TRACE(log_text):
     from datetime import datetime
     t_time = time.time()
-    print("\n%s : %s\n" % (log_text, datetime.fromtimestamp(t_time).strftime('%c')))
+
+    if "ProtocolError" in log_text:
+        pass
+    else:
+        print("\n%s : %s" % (log_text, datetime.fromtimestamp(t_time).strftime('%c')))
+        print("Timestamp : \n", t_time)
+
     try:
         f_log = open("TRACE.txt", "a+")
-        # f_log.write("\n%s : %f" % (log_text, t_time))
-        # f_log.write("\nDatetime : %s" % datetime.fromtimestamp(t_time).strftime('%c'))
         f_log.write("\n%s : %s" % (log_text, datetime.fromtimestamp(t_time).strftime('%c')))
         f_log.close()
     except Exception as err:
