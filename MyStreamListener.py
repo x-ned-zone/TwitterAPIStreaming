@@ -70,12 +70,12 @@ class MyStreamListener(tweepy.StreamListener):
 
                     if self.me_index[0] % 2 == 0:
                         sys.stdout.write(
-                            "Streaming ... Tweet [ %i ]   Buffer size = %f bytes \r" %
-                            (self.me_index[0] + 1, float(getsizeof(self.t_buffer))))
+                            "Streaming ... Tweet [ %i ]   Buffer size = %i bytes \r" %
+                            (self.me_index[0] + 1, int(getsizeof(self.t_buffer))))
                     else:
                         sys.stdout.write(
-                            "Streaming ... Tweet [ %i ]   Buffer size = %f bytes \r" %
-                            (self.me_index[0] + 1, float(getsizeof(self.t_buffer))))
+                            "Streaming ... Tweet [ %i ]   Buffer size = %i bytes \r" %
+                            (self.me_index[0] + 1, int(getsizeof(self.t_buffer))))
                     sys.stdout.flush()
 
                     serialize = SerializeMessage(self.out_serialize_file,
@@ -100,7 +100,8 @@ class MyStreamListener(tweepy.StreamListener):
             print("encode error: " + e.message)
 
         except Exception as e:
-            print("Exception error: " + e.__str__())
+            print("ignore : " + e.__str__())
+            pass
 
     # return False in on_data disconnects the stream
     def on_error(self, status_code):
