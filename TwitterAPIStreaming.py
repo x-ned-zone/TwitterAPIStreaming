@@ -222,6 +222,8 @@ def main():
         except Exception:
             print("Error : Option should be a number: 1 or 2")
 
+        streaming_duration = eval(input("\nEnter streaming duration (enter 0 for full twitter spritzer): "))
+
         if streaming_duration == float(0):
             full_spritzer = True
 
@@ -285,7 +287,7 @@ def main():
         del TwitterAPIStreaming.tweets_buffer
 
     except Exception as exp:
-        print("error : ", exp.__str__())
+        print("TAPI main error : ", exp.__str__())
 
 
 if __name__ == "__main__":
