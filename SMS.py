@@ -17,6 +17,8 @@ class SMS(Message):
                  text_language, message_id):
         super(SMS, self).__init__(t_id, date, tweet_text, user_id, user_name, screen_name, source, user_location,
                                   text_language, message_id)
+        self.m_source = ""
+        self.m_destination = ""
 
     """get string representation of message"""
     def get_message(self):
@@ -27,3 +29,11 @@ class SMS(Message):
                                                                                  self.user_location, self.text_language)
         message = "SMS Message: \n" + message
         return message
+
+    def set_destination(self, destination):
+        """"""
+        self.m_destination = destination
+
+    def set_source(self, source):
+        """"""
+        self.m_source = source
