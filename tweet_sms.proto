@@ -20,7 +20,10 @@ message SMSMessage {
     string destinationServer =11;
     int32 destinationPort =12;
 
+    string m_source =13;
+    string m_destination=14;
 }
+
 message Tweet_SMS {
     repeated SMSMessage smses =1;
 }
