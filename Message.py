@@ -20,6 +20,7 @@ class Message (ABC):
     user_name = ""
     user_screen_name = ""
     user_location = ""
+    user_language = ""
 
     multi_media = {"image": {}, "audio": {}, "video": {}}
 
@@ -37,7 +38,7 @@ class Message (ABC):
         self.user_location = user_location
         self.media_source = source
         self.text_language = text_language
-
+        self.user_language = ""
 
     def set_multi_media(self, m_media_list):
         return
