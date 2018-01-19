@@ -81,28 +81,17 @@ class SerializeMessage(threading.Thread):
 
         # Create SMS object(s) from the message splits
         # Write to message to protocol buffer
-
-        for a_tweet in t_buffer:
-            a_text = a_tweet
-            for text in self.truncate_text(len(a_text), a_text, N=140):
-
-                self.me_index[0] += 1
-
-                anSMS = SMS(a_tweet["tweet_id"], a_tweet["date"], text, a_tweet["user_id"], a_tweet["user_name"],
-                            a_tweet["user_screen_name"], a_tweet["source"], a_tweet["user_location"],
-                            a_tweet["text_language"], a_tweet["message_id"])
+        try:
+            for a_tweet in t_buffer:
+                anSMS = SMS(int(a_tweet["tweet_id"]), a_tweet["date"], a_tweet["tweet_text"], int(a_tweet["user_id"]), a_tweet["user_name"],
+                                a_tweet["user_screen_name"], a_tweet["source"], a_tweet["user_location"],
+                                a_tweet["text_lan"], a_tweet["message_id"])
 
                 # Tweet-SMS >> TO >> PROTOCOL BUFFER
                 self.write_to_pb(self.messages_file, anSMS)
-
-                # for text in self.truncate_text(len(self.tweet_text), self.tweet_text, N=140):
-                # self.me_index[0] += 1
-                #
-                # anSMS = SMS(self.tweet_id, self.date, text, self.user_id, self.user_name, self.user_screen_name,
-                #             self.source, self.user_location, self.text_language, message_id=self.me_index[0])
-                #
-                # # Tweet-SMS >> TO >> PROTOCOL BUFFER
-                # self.write_to_pb(self.messages_file, anSMS)
+        except Exception as ex:
+            print("export protob error: ", ex.__str__())
+            pass
 
     # =================================================================================================================
     tweet_messages = tweet_sms_pb.Tweet_SMS()
